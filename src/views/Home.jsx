@@ -23,10 +23,9 @@ function Home() {
     axios
       .post("/process", formData)
       .then((res) => {
-        const reader = new FileReader();
         console.log(res);
-        reader.readAsDataURL(new Blob([res.data], { type: "image/png" }));
-        reader.onloadend = () => setResult(reader.result);
+        const final_string = `data:image/png;base64,${res.data}`;
+        setResult(final_string);
       })
       .catch((err) => console.warn(err));
   };
@@ -42,8 +41,8 @@ function Home() {
           Submit
         </button>
       </form>
-      <img src={preview} alt="" className="h-32 w-32" />
-      <img src={result} alt="" className="h-32 w-32" />
+      <img src={preview} alt="" />
+      <img src={result} alt="" />
     </div>
   );
 }
