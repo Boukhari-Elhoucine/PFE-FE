@@ -40,7 +40,6 @@ function Home() {
     axios
       .post("/process", formData)
       .then((res) => {
-        console.log(res);
         const final_string = `data:image/png;base64,${res.data}`;
         setResult(final_string);
       })
