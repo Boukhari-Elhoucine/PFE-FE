@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { validateData, validateOnChange } from "./utils";
+import { MdAddPhotoAlternate } from "react-icons/md";
+import Spinner from "./Spinner";
 
 function Home() {
   const [file, setFile] = useState("");
@@ -38,10 +40,13 @@ function Home() {
     formData.append("iters", params.iters);
     formData.append("alpha", params.alpha);
     axios
-      .post("/process", formData)
+      .post("/process", formData, { responseType: "blob" })
       .then((res) => {
-        const final_string = `data:image/png;base64,${res.data}`;
-        setResult(final_string);
+        const final = new Blob([res.data]);
+        const final_str = URL.createObjectURL(final);
+        setResult(final_str);
+        //const final_string = `data:image/png;base64,${res.data}`;
+        //setResult(final_string);
       })
       .catch((err) => console.warn(err))
       .finally(() => setProcessing(false));
@@ -50,11 +55,11 @@ function Home() {
     const { name, value } = event.target;
     setParams({ ...params, [name]: value });
   };
-  console.log(params, "pararms");
+
   return (
     <div className="h-screen flex justify-center items-center ">
       <form
-        className="flex flex-col justify-between items-start h-1/2 flex-1 px-10"
+        className="flex flex-col justify-between items-start h-1/2  px-10"
         onSubmit={handleSubmit}
       >
         <div className="flex flex-col">
@@ -65,7 +70,7 @@ function Home() {
             onBlur={handleBlur}
             onChange={handleInput}
             className="py-1 px-2 outline-none border border-blue-500 rounded"
-            placeholder="Number of iteration"
+            placeholder="Nombre d'itération"
           />
           {error.iters && touched.iters ? (
             <span className="text-red-400 text-xs mt-1">{error.iters}</span>
@@ -85,7 +90,23 @@ function Home() {
             <span className="text-red-400 text-xs mt-1">{error.alpha}</span>
           ) : null}
         </div>
-        <input type="file" accept="image/*" onChange={handleChange} />
+        <div className="w-full flex">
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleChange}
+            id="file"
+          />
+          <label
+            htmlFor="file"
+            className="bg-blue-500 text-gray-50 flex-1 rounded py-1 items-center flex justify-center cursor-pointer "
+          >
+            {" "}
+            <MdAddPhotoAlternate className="text-lg mr-1" />
+            Ajouter une image
+          </label>
+        </div>
         <button
           type="submit"
           disabled={validateData(params) || processing}
@@ -94,9 +115,26 @@ function Home() {
           Submit
         </button>
       </form>
-      <div className="h-screen bg-red-400 flex-1">
-        <img src={preview} alt="" />
-        <img src={result} alt="" />
+      <div className="h-screen flex-1 flex items-center">
+        {preview ? (
+          <div className="mr-10">
+            <p className="text-center">image original</p>
+            <img src={preview} alt="original" />
+          </div>
+        ) : null}
+        {result ? (
+          processing ? (
+            <div className="flex items-center">
+              <Spinner />
+              <span>Processing...</span>
+            </div>
+          ) : (
+            <div>
+              <p className="text-center"> image segmenter</p>
+              <img src={result} alt="" />
+            </div>
+          )
+        ) : null}
       </div>
     </div>
   );
