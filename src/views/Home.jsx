@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { validateData, validateOnChange } from "./utils";
-import { MdAddPhotoAlternate } from "react-icons/md";
+import { validateOnChange } from "./utils";
+import Form from "./Form";
 import Spinner from "./Spinner";
 
 function Home() {
@@ -57,90 +57,42 @@ function Home() {
   };
 
   return (
-    <div className="h-screen flex justify-center items-center ">
-      <form
-        className="flex flex-col justify-between items-start h-1/2  px-10"
-        onSubmit={handleSubmit}
-      >
-        <div className="flex flex-col">
-          <label htmlFor="ite" className="text-sm text-gray-800">
-            Nombre d'itération
-          </label>
-          <input
-            type="text"
-            id="ite"
-            value={params.iters}
-            name="iters"
-            onBlur={handleBlur}
-            onChange={handleInput}
-            className="py-1 px-2 outline-none border border-blue-500 rounded"
-          />
-          {error.iters && touched.iters ? (
-            <span className="text-red-400 text-xs mt-1">{error.iters}</span>
+    <div className="h-screen bg-gradient-to-t from-yellow-100 to-yellow-50   flex items-center justify-center ">
+      <div className="container flex flex-col  h-screen items-center w-4/5">
+        <h2 className="text-4xl my-5 text-gray-600">
+          Ségmentation d'image mamographique
+        </h2>
+        <Form
+          params={params}
+          touched={touched}
+          error={error}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          processing={processing}
+          handleBlur={handleBlur}
+          handleInput={handleInput}
+        />
+        <div className="h-screen flex items-center">
+          {preview ? (
+            <div className="mr-10">
+              <p className="text-center text-gray-800">image original</p>
+              <img src={preview} alt="original" />
+            </div>
+          ) : null}
+          {result ? (
+            processing ? (
+              <div className="flex items-center">
+                <Spinner />
+                <span>Processing...</span>
+              </div>
+            ) : (
+              <div>
+                <p className="text-center text-gray-800"> image segmenté</p>
+                <img src={result} alt="" />
+              </div>
+            )
           ) : null}
         </div>
-        <div className="flex flex-col">
-          <label htmlFor="al" className="text-sm text-gray-800">
-            alpha
-          </label>
-          <input
-            type="text"
-            value={params.alpha}
-            id="al"
-            onBlur={handleBlur}
-            name="alpha"
-            className="py-1 px-2 outline-none border border-blue-500 rounded"
-            onChange={handleInput}
-          />
-          {error.alpha && touched.alpha ? (
-            <span className="text-red-400 text-xs mt-1">{error.alpha}</span>
-          ) : null}
-        </div>
-        <div className="w-full flex">
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleChange}
-            id="file"
-          />
-          <label
-            htmlFor="file"
-            className="bg-blue-500 text-gray-50 flex-1 rounded py-1 items-center flex justify-center cursor-pointer "
-          >
-            {" "}
-            <MdAddPhotoAlternate className="text-lg mr-1" />
-            Ajouter une image
-          </label>
-        </div>
-        <button
-          type="submit"
-          disabled={validateData(params) || processing}
-          className="bg-blue-500 text-white px-10 py-1 mt-2 rounded focus:outline-none disabled:bg-gray-300"
-        >
-          Submit
-        </button>
-      </form>
-      <div className="h-screen flex-1 flex items-center">
-        {preview ? (
-          <div className="mr-10">
-            <p className="text-center text-gray-800">image original</p>
-            <img src={preview} alt="original" />
-          </div>
-        ) : null}
-        {result ? (
-          processing ? (
-            <div className="flex items-center">
-              <Spinner />
-              <span>Processing...</span>
-            </div>
-          ) : (
-            <div>
-              <p className="text-center text-gray-800"> image segmenté</p>
-              <img src={result} alt="" />
-            </div>
-          )
-        ) : null}
       </div>
     </div>
   );
