@@ -63,24 +63,30 @@ function Home() {
         onSubmit={handleSubmit}
       >
         <div className="flex flex-col">
+          <label htmlFor="ite" className="text-sm text-gray-800">
+            Nombre d'itération
+          </label>
           <input
             type="text"
+            id="ite"
             value={params.iters}
             name="iters"
             onBlur={handleBlur}
             onChange={handleInput}
             className="py-1 px-2 outline-none border border-blue-500 rounded"
-            placeholder="Nombre d'itération"
           />
           {error.iters && touched.iters ? (
             <span className="text-red-400 text-xs mt-1">{error.iters}</span>
           ) : null}
         </div>
         <div className="flex flex-col">
+          <label htmlFor="al" className="text-sm text-gray-800">
+            alpha
+          </label>
           <input
             type="text"
             value={params.alpha}
-            placeholder="alpha"
+            id="al"
             onBlur={handleBlur}
             name="alpha"
             className="py-1 px-2 outline-none border border-blue-500 rounded"
@@ -118,7 +124,7 @@ function Home() {
       <div className="h-screen flex-1 flex items-center">
         {preview ? (
           <div className="mr-10">
-            <p className="text-center">image original</p>
+            <p className="text-center text-gray-800">image original</p>
             <img src={preview} alt="original" />
           </div>
         ) : null}
@@ -130,7 +136,7 @@ function Home() {
             </div>
           ) : (
             <div>
-              <p className="text-center"> image segmenter</p>
+              <p className="text-center text-gray-800"> image segmenté</p>
               <img src={result} alt="" />
             </div>
           )
