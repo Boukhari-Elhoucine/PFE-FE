@@ -73,7 +73,7 @@ function Home() {
           handleBlur={handleBlur}
           handleInput={handleInput}
         />
-        <div className="h-fit flex items-center">
+        <div className="h-4/5 flex items-center">
           {preview ? (
             <div className="mr-10">
               <p className="text-center text-lg text-gray-800">
