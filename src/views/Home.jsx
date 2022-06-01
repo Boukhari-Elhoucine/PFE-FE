@@ -40,13 +40,14 @@ function Home() {
     formData.append("iters", params.iters);
     formData.append("alpha", params.alpha);
     axios
-      .post("/process", formData, { responseType: "blob" })
+      .post("/process", formData)
       .then((res) => {
-        const final = new Blob([res.data]);
-        const final_str = URL.createObjectURL(final);
-        setResult(final_str);
-        //const final_string = `data:image/png;base64,${res.data}`;
-        //setResult(final_string);
+        const final_images = [];
+        res.data.result.forEach((img) => {
+          const final_string = `data:image/png;base64,${img}`;
+          final_images.push(final_string);
+        });
+        setResult(final_images);
       })
       .catch((err) => console.warn(err))
       .finally(() => setProcessing(false));
@@ -57,8 +58,8 @@ function Home() {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-t from-yellow-100 to-yellow-50   flex items-center justify-center ">
-      <div className="container flex flex-col  h-screen items-center w-4/5">
+    <div className="h-full bg-gradient-to-t from-yellow-100 to-yellow-50   flex items-center justify-center ">
+      <div className="flex flex-col  h-screen items-center w-4/5">
         <h2 className="text-4xl my-5 text-gray-600">
           Ségmentation d'image médicale
         </h2>
@@ -72,11 +73,17 @@ function Home() {
           handleBlur={handleBlur}
           handleInput={handleInput}
         />
-        <div className="h-screen flex items-center">
+        <div className="h-fit flex items-center">
           {preview ? (
             <div className="mr-10">
-              <p className="text-center text-gray-800">image original</p>
-              <img src={preview} alt="original" />
+              <p className="text-center text-lg text-gray-800">
+                image original
+              </p>
+              <img
+                src={preview}
+                alt="original"
+                className="h-52 object-contain"
+              />
             </div>
           ) : null}
           {result ? (
@@ -86,10 +93,24 @@ function Home() {
                 <span>Processing...</span>
               </div>
             ) : (
-              <div>
-                <p className="text-center text-gray-800"> image segmentée</p>
-                <img src={result} alt="" />
-              </div>
+              <>
+                <div>
+                  <p className="text-center text-lg text-gray-800">
+                    contour initial
+                  </p>
+                  <img
+                    src={result[0]}
+                    alt=""
+                    className="h-52 mr-2 object-contain"
+                  />
+                </div>
+                <div>
+                  <p className="text-center text-lg text-gray-800">
+                    contour finale
+                  </p>
+                  <img src={result[1]} alt="" className="h-52 object-contain" />
+                </div>
+              </>
             )
           ) : null}
         </div>
