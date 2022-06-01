@@ -60,7 +60,7 @@ function Home() {
     <div className="h-screen bg-gradient-to-t from-yellow-100 to-yellow-50   flex items-center justify-center ">
       <div className="container flex flex-col  h-screen items-center w-4/5">
         <h2 className="text-4xl my-5 text-gray-600">
-          Ségmentation d'image mamographique
+          Ségmentation d'image médicale
         </h2>
         <Form
           params={params}
@@ -87,7 +87,7 @@ function Home() {
               </div>
             ) : (
               <div>
-                <p className="text-center text-gray-800"> image segmenté</p>
+                <p className="text-center text-gray-800"> image segmentée</p>
                 <img src={result} alt="" />
               </div>
             )
